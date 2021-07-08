@@ -33,7 +33,7 @@ exports.editUser = async (req, res) => {
 exports.getUsers = async (req, res) => {
   const users = await User.find();
   try {
-    res.status(200).json({ users: users });
+    res.status(200).json({ users });
   } catch (error) {
     console.log("get users failed", error);
     res.status(403).json({ msg: "get users failed" });
@@ -42,7 +42,7 @@ exports.getUsers = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   const { _id } = req.params;
-  const user = await User.findById({_id});
+  const user = await User.findById({ _id });
 
   console.log("my user", user);
 
@@ -50,5 +50,17 @@ exports.getUser = async (req, res) => {
     res.status(204).json({ user: user });
   } catch (error) {
     res.status(404).json({ msg: "get user failed" });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const { _id } = req.params;
+
+  try {
+    await User.findByIdAndDelete({ _id });
+    res.status(200).json({ msg: "User deleted with success" });
+  } catch (error) {
+    console.error("User delete failed", error);
+    res.status(402).json({ msg: "User delete failed" });
   }
 };
