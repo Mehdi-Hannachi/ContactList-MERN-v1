@@ -1,9 +1,10 @@
 import "./App.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "./JS/actions/userActions";
+import { getUsers, toggleFalse } from "./JS/actions/userActions";
 import UsersList from "./components/UsersList/UsersList";
 import { Route, Link } from "react-router-dom";
+import AddUser from "./components/AddUser/AddUser";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,9 +25,13 @@ function App() {
       <Link to="/users">
         <button>Users List</button>
       </Link>
-      <button>Add User</button>
+
+      <Link to="/add-user">
+        <button onClick={() => dispatch(toggleFalse())}>Add User</button>
+      </Link>
 
       <Route exact path="/users" render={() => <UsersList />} />
+      <Route exact path="/(add-user|edit-user)/" render={() => <AddUser />} />
     </div>
   );
 }

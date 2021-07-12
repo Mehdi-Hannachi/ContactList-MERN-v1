@@ -5,8 +5,9 @@ exports.addUser = async (req, res) => {
 
   const newUser = await new User({ ...req.body });
   const email = req.body.email;
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
   console.log(newUser);
+  console.log("1", user);
   try {
     if (user) {
       return res.status(400).json({ msg: "User already exist" });
@@ -40,17 +41,23 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-exports.getUser = async (req, res) => {
+exports.getUser = (req, res) => {
   const { _id } = req.params;
-  const user = await User.findById({ _id });
+  // const user = await User.findById({ _id });
 
-  console.log("my user", user);
+  User.find({ _id })
+    .then((user) => res.status(200).json(user[0]))
+    .catch((err) => res.json(err));
 
-  try {
-    res.status(204).json({ user: user });
-  } catch (error) {
-    res.status(404).json({ msg: "get user failed" });
-  }
+  // try {
+  //   const user = await User.find({ _id });
+
+  //   console.log("my user", user);
+
+  //   res.status(204).json(user);
+  // } catch (error) {
+  //   res.status(404).json({ msg: "get user failed" });
+  // }
 };
 
 exports.deleteUser = async (req, res) => {
