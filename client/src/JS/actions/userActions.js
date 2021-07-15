@@ -13,6 +13,9 @@ const {
   GET_USER,
   TOGGLE_TRUE,
   TOGGLE_FALSE,
+  DELETE_USER,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_FAILED,
 } = require("../constants/actionstype");
 
 export const getUsers = () => async (dispatch) => {
@@ -34,9 +37,13 @@ export const addUser = (newUser) => async (dispatch) => {
     console.log(res.data);
 
     dispatch({ type: ADD_USER_SUCCESS, payload: res.data });
+    // alert(res.data.msg);
+    dispatch(getUsers());
   } catch (error) {
     console.log(error.response);
     dispatch({ type: ADD_USER_FAILED, payload: error.response.data });
+    console.log(error.response.data);
+    error.response.data.errors.map((err) => alert(err.msg));
   }
 };
 
@@ -47,7 +54,9 @@ export const editUser = (id, editUser) => async (dispatch) => {
     const res = await axios.put(`/user/${id}`, editUser);
 
     dispatch({ type: EDIT_USER_SUCCESS, payload: res.data });
+    dispatch(getUsers());
   } catch (error) {
+    console.log(error);
     dispatch({ type: EDIT_USER_FAILED, payload: error.response.data });
   }
 };
@@ -59,6 +68,19 @@ export const getUser = (id) => async (dispatch) => {
     dispatch({ type: GET_USER, payload: res.data });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const deleteUser = (id) => async (dispatch) => {
+  dispatch({ type: DELETE_USER });
+
+  try {
+    const res = await axios.delete(`/user/${id}`);
+
+    dispatch({ type: DELETE_USER_SUCCESS, payload: res.data });
+    dispatch(getUsers());
+  } catch (error) {
+    dispatch({ type: DELETE_USER_FAILED, payload: error.response.data });
   }
 };
 

@@ -2,6 +2,9 @@ import {
   ADD_USER,
   ADD_USER_FAILED,
   ADD_USER_SUCCESS,
+  DELETE_USER,
+  DELETE_USER_FAILED,
+  DELETE_USER_SUCCESS,
   EDIT_USER,
   EDIT_USER_FAILED,
   EDIT_USER_SUCCESS,
@@ -16,7 +19,7 @@ import {
 const initialState = {
   loading: false,
   users: null,
-  msg: "",
+
   errors: [],
   isEdit: false,
   user: {},
@@ -27,6 +30,7 @@ const userReducer = (state = initialState, { type, payload }) => {
     case GET_USERS:
     case ADD_USER:
     case EDIT_USER:
+    case DELETE_USER:
       return {
         ...state,
         loading: true,
@@ -39,6 +43,15 @@ const userReducer = (state = initialState, { type, payload }) => {
         users: payload,
       };
     case EDIT_USER_SUCCESS:
+    case DELETE_USER_SUCCESS:
+    case ADD_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        msg: payload,
+      };
+
+    case ADD_USER_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -48,17 +61,11 @@ const userReducer = (state = initialState, { type, payload }) => {
     case GET_USERS_FAILED:
     case ADD_USER_FAILED:
     case EDIT_USER_FAILED:
+    case DELETE_USER_FAILED:
       return {
         ...state,
         loading: false,
-        msg: payload.msg,
-      };
-
-    case ADD_USER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        msg: payload.msg,
+        msg: payload,
       };
 
     case TOGGLE_TRUE:

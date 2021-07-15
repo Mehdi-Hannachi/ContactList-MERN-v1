@@ -1,4 +1,5 @@
 const express = require("express");
+const { registerRules, validator } = require("../middlewares/validator");
 const {
   addUser,
   editUser,
@@ -7,9 +8,10 @@ const {
   deleteUser,
 } = require("../controllers/user.controller");
 
+
 const Router = express.Router();
 
-Router.post("/register", addUser);
+Router.post("/register", registerRules(), validator, addUser);
 Router.put("/:_id", editUser);
 Router.get("/users", getUsers);
 Router.get("/:_id", getUser);

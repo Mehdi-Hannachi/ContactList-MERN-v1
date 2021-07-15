@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { getUser, toggleTrue } from "../../JS/actions/userActions";
+import { deleteUser, getUser, toggleTrue } from "../../JS/actions/userActions";
 import { useDispatch } from "react-redux";
 import AddUser from "../AddUser/AddUser";
 
@@ -23,7 +23,7 @@ const UserCard = ({ user }) => {
           Edit User
         </button>
       </Link>
-      <button>DELETE</button>
+      <button onClick={() => dispatch(deleteUser(user._id))}>DELETE</button>
     </div>
   );
 };

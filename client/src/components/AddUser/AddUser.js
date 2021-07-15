@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Modal from "react-modal";
-import { addUser } from "../../JS/actions/userActions";
+import { addUser, editUser } from "../../JS/actions/userActions";
 
 const customStyles = {
   content: {
@@ -16,33 +16,30 @@ const customStyles = {
 };
 
 const AddUser = () => {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [tel, setTel] = useState();
   const [adress, setAdress] = useState("");
 
-  const [person, setPerson] = useState({
-    fullName: "",
-    email: "",
-    tel: "",
-    adress: "",
-  });
-
   const isEdit = useSelector((state) => state.userReducer.isEdit);
   const user = useSelector((state) => state.userReducer.user);
+  const msg = useSelector((state) => state.userReducer.msg);
 
   useEffect(() => {
+    openModal();
     if (isEdit) {
-      setPerson(user);
+      // setPerson(user);
+      setFullName(user.fullName);
+      setEmail(user.email);
+      setTel(user.tel);
+      setAdress(user.adress);
     } else {
-      setPerson({
-        fullName: "",
-        email: "",
-        tel: "",
-        adress: "",
-      });
+      setFullName("");
+      setEmail("");
+      setTel("");
+      setAdress("");
     }
   }, [isEdit, user]);
 
@@ -56,10 +53,6 @@ const AddUser = () => {
     setIsOpen(false);
   }
 
-  //   useEffect(() => {
-  //     openModal();
-  //   }, []);
-
   const add = (e) => {
     e.preventDefault();
     const newUser = {
@@ -70,47 +63,62 @@ const AddUser = () => {
     };
 
     dispatch(addUser(newUser));
+    // alert(msg);
+    // closeModal();
   };
 
-  const edit = () => {};
+  console.log(user);
+
+  const edit = (e) => {
+    e.preventDefault();
+    dispatch(editUser(user._id, { fullName, email, tel, adress }));
+    closeModal();
+  };
 
   return (
     <div>
-      <button onClick={openModal}>{isEdit ? "Edit User" : "Add User"}</button>
+      {/* <button onClick={openModal}>{isEdit ? "Edit User" : "Add User"}</button> */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal"
       >
         <button onClick={closeModal}>close</button>
 
         <form>
+          {msg ? <span>{msg.msg}</span> : null}
           <input
             type="text"
-            value={person.fullName}
-            placeholder="fullName"
+            s
+            value={fullName}
+            placeholder="FullName ... "
             onChange={(e) => setFullName(e.target.value)}
           />
           <input
             type="text"
-            value={person.email}
-            placeholder="email"
+            value={email}
+            placeholder="Email ..."
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="text"
-            value={person.tel}
-            placeholder="tel"
+            value={tel}
+            placeholder="Num Tel ..."
             onChange={(e) => setTel(e.target.value)}
           />
           <input
             type="text"
-            value={person.adress}
-            placeholder="adress"
+            value={adress}
+            placeholder="Adress ..."
             onChange={(e) => setAdress(e.target.value)}
           />
-          <button onClick={(e) => add(e)}>{isEdit ? "Edit" : "Add"}</button>
+          <button
+            onClick={(e) => {
+              isEdit ? edit(e) : add(e);
+            }}
+          >
+            {isEdit ? "Edit" : "Add"}
+          </button>
         </form>
       </Modal>
     </div>
